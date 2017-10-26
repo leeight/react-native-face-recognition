@@ -18,6 +18,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.util.SparseArray;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -97,10 +98,12 @@ public class RNFaceRecognitionModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public SparseArray<Face> detect(Bitmap bitmap, Context context) {
-    FaceDetector detector = new FaceDetector.Builder(context)
+  public SparseArray<Face> detect(String encondedImage) {
+    byte[] base64Image = Base64.decode(encondedImage, Base64.DEFAULT);
+    Bitmap bitmap = BitmapFactory.decodeByteArray(base64Image, 0, base64Image.length);
+
+    FaceDetector detector = new FaceDetector.Builder(this.reactContext)
         .setTrackingEnabled(false)
-        .setLandmarkType(FaceDetector.ALL_LANDMARKS)
         .build();
     Frame frame = new Frame.Builder().setBitmap(bitmap).build();
 
@@ -118,6 +121,7 @@ public class RNFaceRecognitionModule extends ReactContextBaseJavaModule {
       faceIsDetected = false;
     }
 
-    return detector.detect(frame);
+    detector.release();
+    return faces;
   }
 }
