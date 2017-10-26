@@ -8,13 +8,14 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "react-native"
+    "react-native",
+    "android",
+    "ios"
   ],
-  "author": "",
-  "license": "",
+  "author": "Entria - The Tech Team",
+  "license": "MIT",
   "peerDependencies": {
     "react-native": "^0.41.2",
     "react-native-windows": "0.41.0-rc.1"
-
   }
 }
