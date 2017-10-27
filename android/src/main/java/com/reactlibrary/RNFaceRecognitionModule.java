@@ -29,6 +29,9 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.Promise;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.Arguments;
 
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.Detector;
@@ -98,7 +101,7 @@ public class RNFaceRecognitionModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public SparseArray<Face> detect(String encondedImage) {
+  public void detect(String encondedImage, Promise promise) {
     byte[] base64Image = Base64.decode(encondedImage, Base64.DEFAULT);
     Bitmap bitmap = BitmapFactory.decodeByteArray(base64Image, 0, base64Image.length);
 
@@ -108,20 +111,25 @@ public class RNFaceRecognitionModule extends ReactContextBaseJavaModule {
     Frame frame = new Frame.Builder().setBitmap(bitmap).build();
 
     SparseArray<Face> faces = detector.detect(frame);
+    WritableMap faceMap = Arguments.createMap();
 
     if(faces.size() == 1 && faceIsDetected){
       for (int i = 0; i < faces.size(); i++) {
         Face thisFace = faces.valueAt(i);
-        int x = (int) thisFace.getPosition().x;
-        int y = (int) thisFace.getPosition().y;
-        int width = (int) thisFace.getWidth();
-        int height = (int) thisFace.getHeight();
+
+        faceMap.putInt("x", (int) thisFace.getPosition().x);
+        faceMap.putInt("y", (int) thisFace.getPosition().y);
+        faceMap.putInt("width", (int) thisFace.getWidth());
+        faceMap.putInt("height", (int) thisFace.getHeight());
+
+        detector.release();
+        promise.resolve(faceMap);
       }
     } else {
       faceIsDetected = false;
-    }
 
-    detector.release();
-    return faces;
+      detector.release();
+      promise.reject("FACE_NOT_FOUND");
+    }
   }
 }

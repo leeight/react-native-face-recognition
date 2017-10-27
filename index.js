@@ -1,6 +1,10 @@
 
-import { NativeModules } from 'react-native';
+// import { NativeModules } from 'react-native';
+//
+// const { RNFaceRecognition } = NativeModules;
+//
+// export default RNFaceRecognition;
 
-const { RNFaceRecognition } = NativeModules;
+import RNFaceRecognition from './RNFaceRecognition';
 
 export default RNFaceRecognition;
