@@ -1,16 +1,20 @@
 
 {
-  "name": "react-native-face-recognition",
-  "version": "1.0.0",
-  "description": "",
+  "name": "@entria/react-native-face-recognition",
+  "version": "0.0.1",
+  "description": "Allow facial recognition in React Native applications",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "release:patch": "npm run check && npm version patch && git push --follow-tags && npm publish --access public",
+    "release:minor": "npm run check && npm version minor && git push --follow-tags && npm publish --access public",
+    "release:major": "npm run check && npm version major && git push --follow-tags && npm publish --access public"
   },
   "keywords": [
     "react-native",
     "android",
-    "ios"
+    "ios",
+    "face-recognition"
   ],
   "author": "Entria - The Tech Team",
   "license": "MIT",
