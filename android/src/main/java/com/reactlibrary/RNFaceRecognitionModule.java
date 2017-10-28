@@ -60,45 +60,6 @@ public class RNFaceRecognitionModule extends ReactContextBaseJavaModule {
     return "RNFaceRecognition";
   }
 
-  /**
-   * Metodo que retorna o estado dos olhos
-   *
-   * @return
-   * --------------------------------------------------------
-   * state:
-   * 0 - Both eyes are open again
-   * 1 - Both eyes are initially open
-   * 2 - Both eyes become closed
-   * --------------------------------------------------------
-   */
-  @ReactMethod
-  public void getStateEye(Face face) {
-    float leftEye  = face.getIsLeftEyeOpenProbability();
-    float rightEye = face.getIsRightEyeOpenProbability();
-
-    // verifica o resultado
-    if ((leftEye == Face.UNCOMPUTED_PROBABILITY) || (rightEye == Face.UNCOMPUTED_PROBABILITY)) { return; }
-
-    // calcula e retorna o minimo
-    float value = Math.min(leftEye, rightEye);
-
-    // verifica o minimo
-    switch (state) {
-      case 0:
-        if (value > EYE_CLOSED_THRESHOLD) { state = 1; }
-        break;
-      case 1:
-        if (value < EYE_CLOSED_THRESHOLD) { state = 2; }
-        break;
-      case 2:
-        if (value > EYE_CLOSED_THRESHOLD)  {
-          Log.d("debug", "blink occurred!");
-
-          state = 0;
-        }
-        break;
-    }
-  }
 
   @ReactMethod
   public void detect(String encondedImage, Promise promise) {
