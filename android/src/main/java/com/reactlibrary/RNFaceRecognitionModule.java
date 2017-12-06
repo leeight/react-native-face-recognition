@@ -67,7 +67,7 @@ public class RNFaceRecognitionModule extends ReactContextBaseJavaModule {
 
     FaceDetector detector = new FaceDetector.Builder(this.reactContext)
         .setTrackingEnabled(false)
-        .setClassificationType(ALL_CLASSIFICATIONS)
+        .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
         .build();
     Frame frame = new Frame.Builder().setBitmap(bitmap).build();
 
