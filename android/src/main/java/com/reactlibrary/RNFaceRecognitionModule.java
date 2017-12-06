@@ -74,23 +74,56 @@ public class RNFaceRecognitionModule extends ReactContextBaseJavaModule {
     SparseArray<Face> faces = detector.detect(frame);
     WritableMap faceMap = Arguments.createMap();
 
-    if(faces.size() == 1 && faceIsDetected){
+    if(faces.size() == 1){
       for (int i = 0; i < faces.size(); i++) {
         Face thisFace = faces.valueAt(i);
+        int eyeState = this.getStateEye(thisFace);
 
         faceMap.putInt("x", (int) thisFace.getPosition().x);
         faceMap.putInt("y", (int) thisFace.getPosition().y);
         faceMap.putInt("width", (int) thisFace.getWidth());
         faceMap.putInt("height", (int) thisFace.getHeight());
+        faceMap.putInt("eyeState", eyeState);
 
         detector.release();
         promise.resolve(faceMap);
       }
     } else {
-      faceIsDetected = false;
-
       detector.release();
       promise.reject("FACE_NOT_FOUND");
     }
   }
+
+  private int getStateEye(Face face) {
+    float leftEye  = face.getIsLeftEyeOpenProbability();
+    float rightEye = face.getIsRightEyeOpenProbability();
+
+    // verifica o resultado
+    if ((leftEye == Face.UNCOMPUTED_PROBABILITY) || (rightEye == Face.UNCOMPUTED_PROBABILITY)) { return 3; }
+
+    // calcula e retorna o minimo
+    float value = Math.min(leftEye, rightEye);
+
+    // verifica o minimo
+    switch (state) {
+      case 0:
+        if (value > EYE_CLOSED_THRESHOLD) {
+          state = 1;
+          return 1;
+        }
+
+      case 1:
+        if (value < EYE_CLOSED_THRESHOLD) {
+          state = 2;
+          return 2;
+        }
+
+      case 2:
+        if (value > EYE_CLOSED_THRESHOLD) {
+          state = 0;
+          return 0;
+        }
+    }
+  }
+
 }
