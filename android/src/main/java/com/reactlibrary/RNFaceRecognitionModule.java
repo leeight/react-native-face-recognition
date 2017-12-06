@@ -60,7 +60,6 @@ public class RNFaceRecognitionModule extends ReactContextBaseJavaModule {
     return "RNFaceRecognition";
   }
 
-
   @ReactMethod
   public void detect(String encondedImage, Promise promise) {
     byte[] base64Image = Base64.decode(encondedImage, Base64.DEFAULT);
@@ -83,7 +82,9 @@ public class RNFaceRecognitionModule extends ReactContextBaseJavaModule {
         faceMap.putInt("y", (int) thisFace.getPosition().y);
         faceMap.putInt("width", (int) thisFace.getWidth());
         faceMap.putInt("height", (int) thisFace.getHeight());
-        faceMap.putInt("eyeState", eyeState);
+        faceMap.putFloat("leftEyeOpen", thisFace.getIsLeftEyeOpenProbability());
+        faceMap.putFloat("rightEyeOpen", thisFace.getIsRightEyeOpenProbability());
+        faceMap.putFloat("smiling", thisFace.getIsSmilingProbability());
 
         detector.release();
         promise.resolve(faceMap);
