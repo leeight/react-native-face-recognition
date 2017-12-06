@@ -86,6 +86,7 @@ public class RNFaceRecognitionModule extends ReactContextBaseJavaModule {
         faceMap.putDouble("leftEyeOpen", thisFace.getIsLeftEyeOpenProbability());
         faceMap.putDouble("rightEyeOpen", thisFace.getIsRightEyeOpenProbability());
         faceMap.putDouble("smiling", thisFace.getIsSmilingProbability());
+        faceMap.putInt("eyeStatus", eyeState);
 
         detector.release();
         promise.resolve(faceMap);
