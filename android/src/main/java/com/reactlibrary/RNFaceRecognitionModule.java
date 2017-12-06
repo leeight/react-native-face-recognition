@@ -98,34 +98,30 @@ public class RNFaceRecognitionModule extends ReactContextBaseJavaModule {
     float leftEye  = face.getIsLeftEyeOpenProbability();
     float rightEye = face.getIsRightEyeOpenProbability();
 
-    // verifica o resultado
-    if ((leftEye == Face.UNCOMPUTED_PROBABILITY) || (rightEye == Face.UNCOMPUTED_PROBABILITY)) { return 3; }
+    if ((leftEye == Face.UNCOMPUTED_PROBABILITY) || (rightEye == Face.UNCOMPUTED_PROBABILITY)) {
+      return 3;
+    }
 
-    // calcula e retorna o minimo
     float value = Math.min(leftEye, rightEye);
 
-    // verifica o minimo
     switch (state) {
       case 0:
         if (value > EYE_CLOSED_THRESHOLD) {
           state = 1;
-          return 1;
         }
 
       case 1:
         if (value < EYE_CLOSED_THRESHOLD) {
           state = 2;
-          return 2;
         }
 
       case 2:
         if (value > EYE_CLOSED_THRESHOLD) {
           state = 0;
-          return 0;
         }
     }
 
-    return 3;
+    return state;
   }
 
 }
