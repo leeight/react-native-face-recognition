@@ -125,7 +125,7 @@ public class RNFaceRecognitionModule extends ReactContextBaseJavaModule {
         }
     }
 
-    return 3
+    return 3;
   }
 
 }
