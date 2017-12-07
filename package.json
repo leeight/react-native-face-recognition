@@ -1,6 +1,6 @@
 {
   "name": "@entria/react-native-face-recognition",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Allow facial recognition in React Native applications",
   "homepage": "https://github.com/entria/react-native-face-recognition#readme",
   "repository": {
