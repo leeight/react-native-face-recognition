@@ -105,26 +105,26 @@ public class RNFaceRecognitionModule extends ReactContextBaseJavaModule {
       return 3;
     }
 
-    float value = Math.min(leftEye, rightEye);
+    float eyesValue = Math.min(leftEye, rightEye);
 
     switch (state) {
       case 0:
-        if (value > EYE_CLOSED_THRESHOLD) {
+        if (eyesValue > EYE_CLOSED_THRESHOLD) {
           state = 1;
-          break;
         }
+        break;
 
       case 1:
-        if (value < EYE_CLOSED_THRESHOLD) {
+        if (eyesValue < EYE_CLOSED_THRESHOLD) {
           state = 2;
-          break;
         }
+        break;
 
       case 2:
-        if (value > EYE_CLOSED_THRESHOLD) {
+        if (eyesValue > EYE_CLOSED_THRESHOLD) {
           state = 0;
-          break;
         }
+        break;
 
       default:
         break;
