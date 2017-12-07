@@ -60,7 +60,6 @@ public class RNFaceRecognitionModule extends ReactContextBaseJavaModule {
     return "RNFaceRecognition";
   }
 
-
   @ReactMethod
   public void detect(String encondedImage, Promise promise) {
     byte[] base64Image = Base64.decode(encondedImage, Base64.DEFAULT);
@@ -68,6 +67,7 @@ public class RNFaceRecognitionModule extends ReactContextBaseJavaModule {
 
     FaceDetector detector = new FaceDetector.Builder(this.reactContext)
         .setTrackingEnabled(false)
+        .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
         .build();
     Frame frame = new Frame.Builder().setBitmap(bitmap).build();
 
@@ -83,7 +83,10 @@ public class RNFaceRecognitionModule extends ReactContextBaseJavaModule {
         faceMap.putInt("y", (int) thisFace.getPosition().y);
         faceMap.putInt("width", (int) thisFace.getWidth());
         faceMap.putInt("height", (int) thisFace.getHeight());
-        faceMap.putInt("eyeState", eyeState);
+        faceMap.putDouble("leftEyeOpen", thisFace.getIsLeftEyeOpenProbability());
+        faceMap.putDouble("rightEyeOpen", thisFace.getIsRightEyeOpenProbability());
+        faceMap.putDouble("smiling", thisFace.getIsSmilingProbability());
+        faceMap.putInt("eyeStatus", eyeState);
 
         detector.release();
         promise.resolve(faceMap);
@@ -98,32 +101,36 @@ public class RNFaceRecognitionModule extends ReactContextBaseJavaModule {
     float leftEye  = face.getIsLeftEyeOpenProbability();
     float rightEye = face.getIsRightEyeOpenProbability();
 
-    // verifica o resultado
-    if ((leftEye == Face.UNCOMPUTED_PROBABILITY) || (rightEye == Face.UNCOMPUTED_PROBABILITY)) { return 3; }
+    if ((leftEye == Face.UNCOMPUTED_PROBABILITY) || (rightEye == Face.UNCOMPUTED_PROBABILITY)) {
+      return 3;
+    }
 
-    // calcula e retorna o minimo
-    float value = Math.min(leftEye, rightEye);
+    float eyesValue = Math.min(leftEye, rightEye);
 
-    // verifica o minimo
     switch (state) {
       case 0:
-        if (value > EYE_CLOSED_THRESHOLD) {
+        if (eyesValue > EYE_CLOSED_THRESHOLD) {
           state = 1;
-          return 1;
         }
+        break;
 
       case 1:
-        if (value < EYE_CLOSED_THRESHOLD) {
+        if (eyesValue < EYE_CLOSED_THRESHOLD) {
           state = 2;
-          return 2;
         }
+        break;
 
       case 2:
-        if (value > EYE_CLOSED_THRESHOLD) {
+        if (eyesValue > EYE_CLOSED_THRESHOLD) {
           state = 0;
-          return 0;
         }
+        break;
+
+      default:
+        break;
     }
+
+    return state;
   }
 
 }
