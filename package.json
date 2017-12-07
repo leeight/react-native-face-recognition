@@ -2,6 +2,11 @@
   "name": "@entria/react-native-face-recognition",
   "version": "0.0.1",
   "description": "Allow facial recognition in React Native applications",
+  "homepage": "https://github.com/entria/react-native-face-recognition#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/entria/react-native-face-recognition"
+  },
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
